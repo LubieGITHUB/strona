@@ -3,10 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="0; url=https://guns.lol/pudderman">
-    <title>Przekierowanie...</title>
+    <title>IP Logger</title>
 </head>
 <body>
-    <p>Jeśli nie nastąpi przekierowanie, kliknij <a href="https://guns.lol/pudderman">tutaj</a>.</p>
+    <h1>Witaj na mojej stronie!</h1>
+    <p id="ipDisplay"></p>
+
+    <script>
+        // Automatyczne zbieranie adresu IP po załadowaniu strony
+        window.onload = function() {
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    const ipAddress = data.ip;
+                    document.getElementById('ipDisplay').innerText = `Twój adres IP to: ${ipAddress}`;
+                    
+                    // Wysyłanie adresu IP do zewnętrznego API
+                    fetch('https://twoje-api.com/zapisz-ip', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ ip: ipAddress })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Odpowiedź z serwera:', data);
+                    })
+                    .catch(error => {
+                        console.error('Błąd podczas wysyłania adresu IP:', error);
+                    });
+                })
+                .catch(error => {
+                    console.error('Błąd:', error);
+                });
+        };
+    </script>
 </body>
 </html>
+
